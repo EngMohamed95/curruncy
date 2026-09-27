@@ -90,24 +90,23 @@ function Flag({ rate }: { rate: Rate }) {
       srcSet={`https://flagcdn.com/w160/${countryCode}.png 2x`}
       width="80"
       height="53"
-      alt={`علم ${country.ar}`}
+      alt={`${rate.iso} flag`}
     />;
   }
   return <span className="flag-emoji" aria-hidden="true">◈</span>;
 }
 
 function RateCard({ rate }: { rate: Rate }) {
-  const country = countryInfo[rate.iso] ?? { ar: "دولة غير معروفة", en: "Unknown country" };
-  return <article className="rate-card" aria-label={`${country.ar}، ${country.en}، ${rate.iso}: شراء ${rate.buy}، بيع ${rate.sell}`}>
+  const country = countryInfo[rate.iso] ?? { ar: "", en: "Unknown country" };
+  return <article className="rate-card" aria-label={`${country.en}, ${rate.iso}: buy ${rate.buy}, sell ${rate.sell}`}>
     <div className="currency-mark"><Flag rate={rate} /></div>
     <div className="currency-identity">
       <strong className="currency-code" dir="ltr">{rate.iso}</strong>
-      <span className="country-name-ar" dir="rtl">{country.ar}</span>
       <small className="country-name-en" dir="ltr">{country.en}</small>
     </div>
     <span className="rate-divider" />
-    <span className="rate-value"><small>شراء</small><b dir="ltr">{rate.buy}</b></span>
-    <span className="rate-value sell"><small>بيع</small><b dir="ltr">{rate.sell}</b></span>
+    <span className="rate-value"><small>BUY</small><b dir="ltr">{rate.buy}</b></span>
+    <span className="rate-value sell"><small>SELL</small><b dir="ltr">{rate.sell}</b></span>
   </article>;
 }
 
@@ -148,18 +147,18 @@ export default function Home() {
     { iso: "USD", buy: "—", sell: "—", flagUrl: "" }, { iso: "EUR", buy: "—", sell: "—", flagUrl: "" }, { iso: "GBP", buy: "—", sell: "—", flagUrl: "" },
   ];
 
-  return <main className="display-shell" dir="rtl">
-    <section className="video-stage" aria-label="شاشة الفيديو">
+  return <main className="display-shell" dir="ltr">
+    <section className="video-stage" aria-label="Video display">
       {videoSrc ? <video key={videoSrc} src={videoSrc} autoPlay muted loop playsInline preload="auto" disablePictureInPicture controlsList="nodownload noplaybackrate noremoteplayback" /> : null}
-      <label className="video-picker floating-video-picker" aria-label="اختيار أو تغيير الفيديو" title="اختيار أو تغيير الفيديو">
+      <label className="video-picker floating-video-picker" aria-label="Choose or change video" title="Choose or change video">
         <Film size={21} aria-hidden="true" />
         <input type="file" accept="video/mp4,video/webm,video/ogg" onChange={chooseVideo} />
       </label>
     </section>
-    <section className="ticker" aria-label="شريط أسعار العملات">
-      <div className="ticker-label"><span className="live-dot" /><div><b>أسعار الصرف</b><small>{loading ? "جارٍ التحميل" : `${rates.length} عملة متاحة`}</small></div></div>
+    <section className="ticker" aria-label="Currency rates ticker">
+      <div className="ticker-label"><span className="live-dot" /><div><b>EXCHANGE RATES</b><small>{loading ? "LOADING" : `${rates.length} CURRENCIES`}</small></div></div>
       <div className="ticker-window"><div className="ticker-track">{[0, 1].map((copy) => <div className="ticker-set" key={copy} aria-hidden={copy === 1}>{tickerRates.map((rate) => <RateCard key={`${copy}-${rate.iso}`} rate={rate} />)}</div>)}</div></div>
-      <div className="ticker-time"><Clock3 size={18} aria-hidden="true" /><div><small>آخر فحص</small><b dir="ltr">{lastChecked?.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) ?? "--:--:--"}</b></div></div>
+      <div className="ticker-time"><Clock3 size={18} aria-hidden="true" /><div><small>LAST CHECK</small><b dir="ltr">{lastChecked?.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) ?? "--:--:--"}</b></div></div>
     </section>
     <span className="sr-only" aria-live="polite">{timestamp}</span>
   </main>;
