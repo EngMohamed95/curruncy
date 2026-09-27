@@ -1,11 +1,11 @@
 "use client";
 
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
-import { Clock3, Film, RefreshCw, Wifi, WifiOff } from "lucide-react";
+import { Clock3, Film } from "lucide-react";
 
 type Rate = { iso: string; buy: string; sell: string; flagUrl: string };
 
-const DEFAULT_VIDEO = "https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4";
+const DEFAULT_VIDEO = "";
 const countryInfo: Record<string, { flag: string; ar: string; en: string }> = {
   AED: { flag: "🇦🇪", ar: "الإمارات", en: "United Arab Emirates" },
   ALL: { flag: "🇦🇱", ar: "ألبانيا", en: "Albania" },
@@ -114,7 +114,6 @@ function RateCard({ rate }: { rate: Rate }) {
 export default function Home() {
   const [rates, setRates] = useState<Rate[]>([]);
   const [timestamp, setTimestamp] = useState("");
-  const [source, setSource] = useState<"live" | "local" | "error">("local");
   const [loading, setLoading] = useState(true);
   const [lastChecked, setLastChecked] = useState<Date | null>(null);
   const [videoSrc, setVideoSrc] = useState(DEFAULT_VIDEO);
@@ -127,13 +126,12 @@ export default function Home() {
       const result = parseRates(await response.text());
       if (!result.rates.length) throw new Error("No rates");
       setRates(result.rates); setTimestamp(result.timestamp);
-      setSource(response.headers.get("X-Rates-Source") === "live" ? "live" : "local");
     } catch {
       try {
         const response = await fetch(`/rateswithcss.xml?t=${Date.now()}`, { cache: "no-store" });
         const result = parseRates(await response.text());
-        setRates(result.rates); setTimestamp(result.timestamp); setSource("local");
-      } catch { setSource("error"); }
+        setRates(result.rates); setTimestamp(result.timestamp);
+      } catch { /* Keep the last successfully loaded rates. */ }
     } finally { setLastChecked(new Date()); setLoading(false); }
   }, []);
 
@@ -152,17 +150,11 @@ export default function Home() {
 
   return <main className="display-shell" dir="rtl">
     <section className="video-stage" aria-label="شاشة الفيديو">
-      <video key={videoSrc} autoPlay muted loop playsInline controls preload="metadata"><source src={videoSrc} type="video/mp4" />متصفحك لا يدعم تشغيل الفيديو.</video>
-      <div className="video-shade" />
-      <header className="topbar">
-        <div className="brand"><span className="brand-mark">ص</span><div><strong>شاشة الصرافة</strong><small>أسعار العملات المباشرة</small></div></div>
-        <label className="video-picker"><Film size={18} aria-hidden="true" />اختر فيديو العرض<input type="file" accept="video/mp4,video/webm,video/ogg" onChange={chooseVideo} /></label>
-      </header>
-      <div className="screen-copy"><span className="eyebrow">مرحبًا بكم</span><h1>خدمة أسرع، وأسعار واضحة</h1><p>تتحدّث الأسعار تلقائيًا كل 10 ثوانٍ</p></div>
-      <div className={`connection-pill ${source}`} role="status">
-        {source === "live" ? <Wifi size={17} /> : source === "error" ? <WifiOff size={17} /> : <RefreshCw size={17} />}
-        <span>{source === "live" ? "متصل بالمصدر المباشر" : source === "error" ? "تعذر تحديث الأسعار" : "عرض النسخة المحلية"}</span>
-      </div>
+      {videoSrc ? <video key={videoSrc} src={videoSrc} autoPlay muted loop playsInline preload="auto" disablePictureInPicture controlsList="nodownload noplaybackrate noremoteplayback" /> : null}
+      <label className="video-picker floating-video-picker" aria-label="اختيار أو تغيير الفيديو" title="اختيار أو تغيير الفيديو">
+        <Film size={21} aria-hidden="true" />
+        <input type="file" accept="video/mp4,video/webm,video/ogg" onChange={chooseVideo} />
+      </label>
     </section>
     <section className="ticker" aria-label="شريط أسعار العملات">
       <div className="ticker-label"><span className="live-dot" /><div><b>أسعار الصرف</b><small>{loading ? "جارٍ التحميل" : `${rates.length} عملة متاحة`}</small></div></div>
