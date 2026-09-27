@@ -5,7 +5,7 @@ import { Clock3, Film } from "lucide-react";
 
 type Rate = { iso: string; buy: string; sell: string; flagUrl: string };
 
-const DEFAULT_VIDEO = "";
+const DEFAULT_VIDEO = "/display-video.mp4";
 const countryInfo: Record<string, { flag: string; ar: string; en: string }> = {
   AED: { flag: "🇦🇪", ar: "الإمارات", en: "United Arab Emirates" },
   ALL: { flag: "🇦🇱", ar: "ألبانيا", en: "Albania" },
