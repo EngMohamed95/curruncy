@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-const LIVE_RATES_URL = 'https://rates.clearviewsys.com/alsharhan/uploads/ho/rateswithcss.xml';
+const LIVE_RATES_URL = 'https://rates.clearviewsys.com/alsharhan/uploads/ho/xml/rateswithcss.xml';
 
 header('Content-Type: application/xml; charset=iso-8859-1');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
