@@ -86,10 +86,9 @@ function Flag({ rate }: { rate: Rate }) {
     const countryCode = rate.iso.slice(0, 2).toLowerCase();
     return <img
       className="flag-image"
-      src={`https://flagcdn.com/w80/${countryCode}.png`}
-      srcSet={`https://flagcdn.com/w160/${countryCode}.png 2x`}
-      width="80"
-      height="53"
+      src={`https://flagcdn.com/h80/${countryCode}.png`}
+      srcSet={`https://flagcdn.com/h160/${countryCode}.png 2x`}
+      height="80"
       alt={`${rate.iso} flag`}
     />;
   }
@@ -156,7 +155,7 @@ export default function Home() {
       </label>
     </section>
     <section className="ticker" aria-label="Currency rates ticker">
-      <div className="ticker-label"><span className="live-dot" /><div><b>EXCHANGE RATES</b><small>{loading ? "LOADING" : `${rates.length} CURRENCIES`}</small></div></div>
+      <div className="ticker-label"><span className="live-dot" /><div><b>EXCHANGE RATES</b><small>{loading ? "LOADING" : "LIVE"}</small></div></div>
       <div className="ticker-window"><div className="ticker-track">{[0, 1].map((copy) => <div className="ticker-set" key={copy} aria-hidden={copy === 1}>{tickerRates.map((rate) => <RateCard key={`${copy}-${rate.iso}`} rate={rate} />)}</div>)}</div></div>
       <div className="ticker-time"><Clock3 size={18} aria-hidden="true" /><div><small>LAST CHECK</small><b dir="ltr">{lastChecked?.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) ?? "--:--:--"}</b></div></div>
     </section>
