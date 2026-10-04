@@ -155,7 +155,16 @@ export default function Home() {
       </label>
     </section>
     <section className="ticker" aria-label="Currency rates ticker">
-      <div className="ticker-label"><span className="live-dot" /><div><b>EXCHANGE RATES</b><small>{loading ? "LOADING" : "LIVE"}</small></div></div>
+      <div className="ticker-label">
+        <div className="ticker-badge" aria-label="Live updates">
+          <span className="live-dot" />
+          <span>{loading ? "..." : "LIVE"}</span>
+        </div>
+        <div className="ticker-titles">
+          <b>أسعار العملات</b>
+          <small>EXCHANGE RATES</small>
+        </div>
+      </div>
       <div className="ticker-window"><div className="ticker-track">{[0, 1].map((copy) => <div className="ticker-set" key={copy} aria-hidden={copy === 1}>{tickerRates.map((rate) => <RateCard key={`${copy}-${rate.iso}`} rate={rate} />)}</div>)}</div></div>
       <div className="ticker-time"><Clock3 size={18} aria-hidden="true" /><div><small>LAST CHECK</small><b dir="ltr">{lastChecked?.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) ?? "--:--:--"}</b></div></div>
     </section>
