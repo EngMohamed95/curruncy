@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { ChangeEvent, CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 import { Clock3, Film } from "lucide-react";
 
 type Rate = { iso: string; buy: string; sell: string; flagUrl: string };
@@ -115,6 +115,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [lastChecked, setLastChecked] = useState<Date | null>(null);
   const [videoSrc, setVideoSrc] = useState(DEFAULT_VIDEO);
+  const [fixedScreen, setFixedScreen] = useState<{ width: number; height: number; scaleX: number; scaleY: number } | null>(null);
   const objectUrl = useRef<string | null>(null);
 
   const loadRates = useCallback(async () => {
@@ -136,6 +137,17 @@ export default function Home() {
   useEffect(() => { loadRates(); const timer = window.setInterval(loadRates, 10_000); return () => window.clearInterval(timer); }, [loadRates]);
   useEffect(() => () => { if (objectUrl.current) URL.revokeObjectURL(objectUrl.current); }, []);
 
+  // ?screen=6400x768 lays the page out at the LED wall's real size, then squeezes it into the window,
+  // so a controller that stretches the computer's output onto the wall shows correct proportions.
+  useEffect(() => {
+    const match = /^(\d+)x(\d+)$/.exec(new URLSearchParams(window.location.search).get("screen") ?? "");
+    if (!match) return;
+    const width = Number(match[1]), height = Number(match[2]);
+    const fit = () => setFixedScreen({ width, height, scaleX: window.innerWidth / width, scaleY: window.innerHeight / height });
+    fit(); window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, []);
+
   function chooseVideo(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]; if (!file) return;
     if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
@@ -146,7 +158,7 @@ export default function Home() {
     { iso: "USD", buy: "—", sell: "—", flagUrl: "" }, { iso: "EUR", buy: "—", sell: "—", flagUrl: "" }, { iso: "GBP", buy: "—", sell: "—", flagUrl: "" },
   ];
 
-  return <main className="display-shell" dir="ltr">
+  return <main className={fixedScreen ? "display-shell fixed-screen" : "display-shell"} dir="ltr" style={fixedScreen ? { width: fixedScreen.width, height: fixedScreen.height, transform: `scale(${fixedScreen.scaleX}, ${fixedScreen.scaleY})`, "--line-x": `${1 / fixedScreen.scaleX}px` } as CSSProperties : undefined}>
     <section className="video-stage" aria-label="Video display">
       {videoSrc ? <video key={videoSrc} src={videoSrc} autoPlay muted loop playsInline preload="auto" disablePictureInPicture controlsList="nodownload noplaybackrate noremoteplayback" /> : null}
       <label className="video-picker floating-video-picker" aria-label="Choose or change video" title="Choose or change video">
@@ -166,7 +178,7 @@ export default function Home() {
         </div>
       </div>
       <div className="ticker-window"><div className="ticker-track">{[0, 1].map((copy) => <div className="ticker-set" key={copy} aria-hidden={copy === 1}>{tickerRates.map((rate) => <RateCard key={`${copy}-${rate.iso}`} rate={rate} />)}</div>)}</div></div>
-      <div className="ticker-time"><Clock3 size={18} aria-hidden="true" /><div><small>LAST CHECK</small><b dir="ltr">{lastChecked?.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) ?? "--:--:--"}</b></div></div>
+      <div className="ticker-time"><Clock3 size={18} aria-hidden="true" /><div><small>LAST UPDATE</small><b dir="ltr">{lastChecked?.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) ?? "--:--:--"}</b></div></div>
     </section>
     <span className="sr-only" aria-live="polite">{timestamp}</span>
   </main>;
