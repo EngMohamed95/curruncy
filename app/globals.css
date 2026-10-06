@@ -23,7 +23,7 @@ button,input { font:inherit; }
 .fixed-screen .ticker-label,.fixed-screen .ticker-time{will-change:transform}
 .fixed-screen .ticker-badge{gap:.8cqh;padding:.5cqh 1.1cqh;font-size:2cqh}.fixed-screen .live-dot{width:1.1cqh;height:1.1cqh}
 .fixed-screen .ticker-titles b{font-size:3.1cqh;font-weight:800}.fixed-screen .ticker-titles small{color:rgba(255,255,255,.75);font-size:2.1cqh;font-weight:700}
-.fixed-screen .ticker-time small{color:rgba(255,255,255,.75);font-size:2.1cqh;font-weight:700;letter-spacing:.04em}.fixed-screen .ticker-time b{font-size:3cqh;font-weight:800}.fixed-screen .ticker-time>svg{width:2.8cqh;height:2.8cqh}
+.fixed-screen .ticker-time small{color:#fff;font-size:2.6cqh;font-weight:800;letter-spacing:.05em}.fixed-screen .ticker-time b{font-size:3cqh;font-weight:800}.fixed-screen .ticker-time>svg{width:2.8cqh;height:2.8cqh}
 .fixed-screen .currency-identity{max-width:none}.fixed-screen .currency-code{font-size:2.9cqh}.fixed-screen .country-name-en{color:rgba(255,255,255,.8);font-size:2.3cqh;font-weight:700;letter-spacing:.03em}
 .fixed-screen .rate-value small{font-size:2.2cqh;font-weight:800;letter-spacing:.04em}.fixed-screen .rate-value b{font-size:3cqh;font-weight:800}
 .video-stage { position:absolute; inset:0; overflow:hidden; background:#000; }
