@@ -6,6 +6,7 @@ import { Clock3, Film } from "lucide-react";
 type Rate = { iso: string; buy: string; sell: string; flagUrl: string };
 
 const DEFAULT_VIDEO = "/display-video.mp4";
+const TICKER_SECONDS = 182; // Roughly how long one full pass of the rates takes.
 const countryInfo: Record<string, { flag: string; ar: string; en: string }> = {
   AED: { flag: "🇦🇪", ar: "الإمارات", en: "United Arab Emirates" },
   ALL: { flag: "🇦🇱", ar: "ألبانيا", en: "Albania" },
@@ -117,6 +118,8 @@ export default function Home() {
   const [videoSrc, setVideoSrc] = useState(DEFAULT_VIDEO);
   const [fixedScreen, setFixedScreen] = useState<{ width: number; height: number; scaleX: number; scaleY: number } | null>(null);
   const objectUrl = useRef<string | null>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const tickerOffset = useRef(0);
 
   const loadRates = useCallback(async () => {
     try {
@@ -148,6 +151,26 @@ export default function Home() {
     return () => window.removeEventListener("resize", fit);
   }, []);
 
+  // Move the ticker a whole number of device pixels per frame, snapped to the pixel grid. A CSS animation lands on
+  // fractional pixels, so text keeps blurring and sharpening as it moves - glaring once the LED wall stretches it.
+  useEffect(() => {
+    const track = trackRef.current; if (!track) return;
+    const pixel = 1 / ((fixedScreen?.scaleX ?? 1) * window.devicePixelRatio); // layout px per device px
+    let frame = 0, last = 0;
+    const tick = (time: number) => {
+      frame = requestAnimationFrame(tick);
+      const setWidth = (track.firstElementChild as HTMLElement).offsetWidth; if (!setWidth) return;
+      const step = Math.max(1, Math.round(setWidth / TICKER_SECONDS / 60 / pixel)); // device px per 60Hz frame
+      const frames = last ? Math.min(10, Math.max(1, Math.round((time - last) / (1000 / 60)))) : 0; last = time;
+      tickerOffset.current += frames * step;
+      if (tickerOffset.current * pixel >= setWidth) tickerOffset.current -= setWidth / pixel;
+      const origin = track.parentElement!.getBoundingClientRect().left * window.devicePixelRatio;
+      track.style.transform = `translateX(${(Math.round(origin - tickerOffset.current) - origin) * pixel}px)`;
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [fixedScreen]);
+
   function chooseVideo(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]; if (!file) return;
     if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
@@ -177,7 +200,7 @@ export default function Home() {
           <small>EXCHANGE RATES</small>
         </div>
       </div>
-      <div className="ticker-window"><div className="ticker-track">{[0, 1].map((copy) => <div className="ticker-set" key={copy} aria-hidden={copy === 1}>{tickerRates.map((rate) => <RateCard key={`${copy}-${rate.iso}`} rate={rate} />)}</div>)}</div></div>
+      <div className="ticker-window"><div className="ticker-track" ref={trackRef}>{[0, 1].map((copy) => <div className="ticker-set" key={copy} aria-hidden={copy === 1}>{tickerRates.map((rate) => <RateCard key={`${copy}-${rate.iso}`} rate={rate} />)}</div>)}</div></div>
       <div className="ticker-time"><Clock3 size={18} aria-hidden="true" /><div><small>LAST UPDATE</small><b dir="ltr">{lastChecked?.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) ?? "--:--:--"}</b></div></div>
     </section>
     <span className="sr-only" aria-live="polite">{timestamp}</span>
