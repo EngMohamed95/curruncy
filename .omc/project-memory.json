@@ -1,0 +1,240 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1792052428305,
+  "projectRoot": "d:\\projects\\currency-display",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": ">=22.13.0",
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "next",
+        "version": "16.3.4",
+        "category": "fullstack"
+      },
+      {
+        "name": "react",
+        "version": "19.2.6",
+        "category": "frontend"
+      },
+      {
+        "name": "react-dom",
+        "version": "19.2.6",
+        "category": "frontend"
+      },
+      {
+        "name": "vite",
+        "version": "8.0.13",
+        "category": "build"
+      }
+    ],
+    "packageManager": "npm",
+    "runtime": "Node.js 22.13.0"
+  },
+  "build": {
+    "buildCommand": "npm run build",
+    "testCommand": null,
+    "lintCommand": "npm run lint",
+    "devCommand": "npm run dev",
+    "scripts": {
+      "install:ci": "node scripts/install-ci.mjs",
+      "dev": "node scripts/run-framework.mjs dev",
+      "build": "node scripts/run-framework.mjs build",
+      "build:static": "next build",
+      "start": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1 --inspector-port 0",
+      "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+      "db:generate": "drizzle-kit generate"
+    }
+  },
+  "conventions": {
+    "namingStyle": "camelCase",
+    "importStyle": "ES modules",
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "app",
+      "components",
+      "examples",
+      "lib",
+      "public",
+      "scripts"
+    ],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "app": {
+      "path": "app",
+      "purpose": "Application code",
+      "fileCount": 4,
+      "lastAccessed": 1792052428023,
+      "keyFiles": [
+        "chatgpt-auth.ts",
+        "globals.css",
+        "layout.tsx",
+        "page.tsx"
+      ]
+    },
+    "build": {
+      "path": "build",
+      "purpose": "Build output",
+      "fileCount": 2,
+      "lastAccessed": 1792052428026,
+      "keyFiles": [
+        "sites-vite-plugin.LICENSE",
+        "sites-vite-plugin.ts"
+      ]
+    },
+    "components": {
+      "path": "components",
+      "purpose": "UI components",
+      "fileCount": 0,
+      "lastAccessed": 1792052428072,
+      "keyFiles": []
+    },
+    "db": {
+      "path": "db",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1792052428074,
+      "keyFiles": [
+        "index.ts",
+        "schema.ts"
+      ]
+    },
+    "dist": {
+      "path": "dist",
+      "purpose": "Distribution/build output",
+      "fileCount": 0,
+      "lastAccessed": 1792052428075,
+      "keyFiles": []
+    },
+    "drizzle": {
+      "path": "drizzle",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1792052428076,
+      "keyFiles": []
+    },
+    "examples": {
+      "path": "examples",
+      "purpose": "Example code",
+      "fileCount": 0,
+      "lastAccessed": 1792052428078,
+      "keyFiles": []
+    },
+    "hooks": {
+      "path": "hooks",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1792052428094,
+      "keyFiles": [
+        "use-mobile.ts"
+      ]
+    },
+    "lib": {
+      "path": "lib",
+      "purpose": "Library code",
+      "fileCount": 1,
+      "lastAccessed": 1792052428094,
+      "keyFiles": [
+        "utils.ts"
+      ]
+    },
+    "out": {
+      "path": "out",
+      "purpose": "Build output",
+      "fileCount": 12,
+      "lastAccessed": 1792052428098,
+      "keyFiles": [
+        "404.html",
+        "display-video.mp4",
+        "favicon.svg",
+        "file.svg",
+        "globe.svg"
+      ]
+    },
+    "public": {
+      "path": "public",
+      "purpose": "Public files",
+      "fileCount": 6,
+      "lastAccessed": 1792052428109,
+      "keyFiles": [
+        "display-video.mp4",
+        "favicon.svg",
+        "file.svg",
+        "globe.svg",
+        "rateswithcss.xml"
+      ]
+    },
+    "scripts": {
+      "path": "scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 10,
+      "lastAccessed": 1792052428115,
+      "keyFiles": [
+        "build-verified.sh",
+        "execution-profile.mjs",
+        "install-ci.mjs",
+        "install-ci.sh",
+        "install-pnpm.sh"
+      ]
+    },
+    "vendor": {
+      "path": "vendor",
+      "purpose": "Third-party code",
+      "fileCount": 2,
+      "lastAccessed": 1792052428130,
+      "keyFiles": [
+        "shadcn-tailwind-4.13.0.css",
+        "shadcn-tailwind-4.13.0.LICENSE.md"
+      ]
+    },
+    "app\\api": {
+      "path": "app\\api",
+      "purpose": "API routes",
+      "fileCount": 0,
+      "lastAccessed": 1792052428143,
+      "keyFiles": []
+    },
+    "out\\api": {
+      "path": "out\\api",
+      "purpose": "API routes",
+      "fileCount": 1,
+      "lastAccessed": 1792052428194,
+      "keyFiles": [
+        "rates.php"
+      ]
+    },
+    "public\\api": {
+      "path": "public\\api",
+      "purpose": "API routes",
+      "fileCount": 1,
+      "lastAccessed": 1792052428197,
+      "keyFiles": [
+        "rates.php"
+      ]
+    }
+  },
+  "hotPaths": [],
+  "userDirectives": []
+}
